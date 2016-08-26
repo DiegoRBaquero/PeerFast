@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PeerFast</title>
+</head>
+<body style="text-align: center">
+
+<h1 style="margin-bottom:-5px">PeerFast</h1>
+<small>P2P Fast.com Clone</small>
+
+<h3>Speed in bytes: <small id="speedBytes"></small></h3>
+<h3>Speed in bits: <small id="speedBits"></small></h3>
+
+<h2 id="reload"></h2>
+
+<script src="https://cdn.jsdelivr.net/webtorrent/latest/webtorrent.min.js"></script>
+<script>
+    var client = new WebTorrent()
+    var maxSpeed = 0
+    var speedBytes = document.querySelector('#speedBytes')
+    var speedBits = document.querySelector('#speedBits')
+    var updateInteval
+    
+    // Sintel, a free, Creative Commons movie
+    var torrentId = 'magnet:?xt=urn:btih:6a9759bffd5c0af65319979fb7832189f4f3c35d&dn=sintel.mp4&tr=wss://tracker.btorrent.xyz&tr=wss://tracker.fastcast.nz&tr=wss://tracker.openwebtorrent.com&tr=wss://tracker.webtorrent.io&ws=https://webtorrent.io/torrents/sintel-1024-surround.mp4&ws=https://webseed.btorrent.xyz/sintel-1024-surround.mp4'
+
+    client.add(torrentId, function (torrent) {
+        // Torrents can contain many files. Let's use the first.
+
+        var updateSpeed = function () {
+            var speed = torrent.downloadSpeed
+            console.debug('Speed', speed)
+            maxSpeed = Math.max(maxSpeed, speed)
+            speedBytes.innerText = prettyBytes(maxSpeed)
+            speedBits.innerText = prettyBytes(maxSpeed*8, true)
+        }
+        
+        updateInteval = setInterval(updateSpeed, 500)
+    })
+    
+    setTimeout(function () {
+        console.debug("Destroying everything")
+        clearInterval(updateInteval)
+        client.torrents[0].destroy(function () {
+            client.destroy(function (err) {
+                if (err) console.error(err)
+            })
+        })
+        document.querySelector('#reload').innerHTML = '<a href="#" onclick="location.reload()">Reload</a>'
+    }, 40000)
+
+    var prettyBytes = function (num, bits) {
+        var exponent, unit, units
+        if (isNaN(num)) {
+            return ''
+        }
+        if (bits) units = [ 'b', 'kb', 'Mb', 'Gb', 'Tb' ]
+        else units = [ 'B', 'kB', 'MB', 'GB', 'TB' ]
+        
+        if (num < 1) {
+            return ''
+        }
+        exponent = Math.min(Math.floor(Math.log(num) / 6.907755278982137), 8)
+        num = (num / Math.pow(1000, exponent)).toFixed(1) * 1
+        unit = units[ exponent ]
+        return num +' ' + unit + (bits ? 'ps' : '/s')
+    }
+</script>
+</body>
+</html>
