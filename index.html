@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="description" content="PeerFast is the first P2P Internet Speed Test">
+    <meta name="keywords" content="speedtest,speed,test,internet,fast.com,speedtest.net,p2p">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/g/normalize@3.0,skeleton@2.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontawesome/4.6/css/font-awesome.min.css">
     <title>PeerFast - P2P Fast.com Clone</title>
@@ -47,16 +49,16 @@
         var updateSpeed = function () {
             var speed = torrent.downloadSpeed
             speeds.push(speed)
-            if(speeds.length > 25) {
+            if(speeds.length > 20) {
                 var shouldStop = true
-                for(i = speeds.length - 25; i < speeds.length; i++) {
+                for(i = speeds.length - 20; i < speeds.length; i++) {
                     if (speeds[i] >= maxSpeed) {
                         shouldStop = false
                         break
                     }
                 }
                 if (shouldStop) {
-                    console.debug('No faster speed in last 5 seconds')
+                    console.debug('No faster speed in last 4 seconds')
                     return stop()
                 }
             }
@@ -78,7 +80,7 @@
                 if (err) console.error(err)
             })
         })
-        document.querySelector('#reload').innerHTML = '<a href="#" onclick="location.reload()">Test again</a>'
+        document.querySelector('#reload').innerHTML = '<a href="#reload" class="button button-primary" onclick="location.reload()">Test again</a>'
     }
     
     function prettyBytes (num, bits) {
