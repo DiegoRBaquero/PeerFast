@@ -40,7 +40,7 @@
     var speeds = []
     
     // Sintel, a free, Creative Commons movie
-    var torrentId = 'magnet:?xt=urn:btih:6a9759bffd5c0af65319979fb7832189f4f3c35d&dn=sintel.mp4&tr=wss://tracker.btorrent.xyz&tr=wss://tracker.fastcast.nz&tr=wss://tracker.openwebtorrent.com&ws=https://webtorrent.io/torrents/sintel-1024-surround.mp4&ws=https://webseed.btorrent.xyz/sintel-1024-surround.mp4'
+    var torrentId = 'magnet:?xt=urn:btih:6a9759bffd5c0af65319979fb7832189f4f3c35d&dn=sintel.mp4&tr=wss://tracker.btorrent.xyz&tr=wss://tracker.openwebtorrent.com&ws=https://webtorrent.io/torrents/sintel-1024-surround.mp4&ws=https://webseed.btorrent.xyz/sintel-1024-surround.mp4'
 
     client.add(torrentId, function (torrent) {
         counters.removeAttribute('style')
@@ -49,9 +49,9 @@
         var updateSpeed = function () {
             var speed = torrent.downloadSpeed
             speeds.push(speed)
-            if(speeds.length > 20) {
+            if(speeds.length > 50) {
                 var shouldStop = true
-                for(i = speeds.length - 20; i < speeds.length; i++) {
+                for(i = speeds.length - 50; i < speeds.length; i++) {
                     if (speeds[i] >= maxSpeed) {
                         shouldStop = false
                         break
@@ -67,7 +67,7 @@
             speedBits.innerText = prettyBytes(maxSpeed*8, true)
         }
         
-        updateInteval = setInterval(updateSpeed, 200)
+        updateInteval = setInterval(updateSpeed, 100)
     })
     
     setTimeout(stop, 30000)
