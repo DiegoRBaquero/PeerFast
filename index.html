@@ -37,6 +37,7 @@
     var counters = document.querySelector('#counters')
     var starting = document.querySelector('#starting')
     var updateInteval
+    var stopTimeout
     var speeds = []
     
     // Sintel, a free, Creative Commons movie
@@ -70,11 +71,12 @@
         updateInteval = setInterval(updateSpeed, 100)
     })
     
-    setTimeout(stop, 30000)
+    stopTimeout = setTimeout(stop, 30000)
 
     function stop () {
         console.debug("Destroying everything")
         clearInterval(updateInteval)
+        clearTimeout(stopTimeout)
         client.torrents[0].destroy(function () {
             client.destroy(function (err) {
                 if (err) console.error(err)
