@@ -1,5 +1,6 @@
 # PeerFast
-P2P Fast.com Clone
+
+P2P Fast.com Clone built with WebTorrent
 
 ### About
 
